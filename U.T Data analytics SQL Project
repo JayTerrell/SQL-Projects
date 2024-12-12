@@ -54,15 +54,15 @@ Consider the following mapping for ratings: “Very Bad”: 1, “Bad”: 2, “
 
 -- Find the percentage distribution of feedback from the customers. Are customers getting more dissatisfied over time?
 
-Select 
-    Quarter_number as Quarter,
-    ROUND(CAST(COUNT(CASE WHEN customer_feedback = 'Very Bad' THEN 1 END) AS FLOAT) / COUNT(customer_feedback) * 100,2)  as VeryBadPercent,
-    ROUND(CAST(COUNT(CASE WHEN customer_feedback = 'Bad' THEN 1 END) AS FLOAT) / COUNT(customer_feedback) * 100 ,2)  as BadPercent,
-    ROUND(CAST(COUNT(CASE WHEN customer_feedback = 'Okay' THEN 1 END) AS FLOAT) / COUNT(customer_feedback) * 100 ,2) as OkayPercent,
-    ROUND(CAST(COUNT(CASE WHEN customer_feedback = 'Good' THEN 1 END) AS FLOAT) / COUNT(customer_feedback)* 100, 2)  as GoodPercent,
-    ROUND(CAST(COUNT(CASE WHEN customer_feedback = 'Very Good' THEN 1 END) AS FLOAT) / COUNT(customer_feedback) * 100,2)  as VeryGoodPercent
-    FROM Order_t
-GROUP BY Quarter;
+      Select 
+          Quarter_number as Quarter,
+          ROUND(CAST(COUNT(CASE WHEN customer_feedback = 'Very Bad' THEN 1 END) AS FLOAT) / COUNT(customer_feedback) * 100,2)  as VeryBadPercent,
+          ROUND(CAST(COUNT(CASE WHEN customer_feedback = 'Bad' THEN 1 END) AS FLOAT) / COUNT(customer_feedback) * 100 ,2)  as BadPercent,
+          ROUND(CAST(COUNT(CASE WHEN customer_feedback = 'Okay' THEN 1 END) AS FLOAT) / COUNT(customer_feedback) * 100 ,2) as OkayPercent,
+          ROUND(CAST(COUNT(CASE WHEN customer_feedback = 'Good' THEN 1 END) AS FLOAT) / COUNT(customer_feedback)* 100, 2)  as GoodPercent,
+          ROUND(CAST(COUNT(CASE WHEN customer_feedback = 'Very Good' THEN 1 END) AS FLOAT) / COUNT(customer_feedback) * 100,2)  as VeryGoodPercent
+          FROM Order_t
+      GROUP BY Quarter;
 
 
 -- What is the trend of the number of orders by quarter?
