@@ -1,30 +1,30 @@
 SELECT
-    EquitySourceName AS EquityPartner,
+    EquityPartner,
 	-- These to sum rows are summing the total budgets of all projects for that equity partner in the previous and current quarter.
-	SUM(previousquarterbudget) AS PreviousQuarterTotalBudget,
-    SUM(currentquarterbudget) AS CurrentQuarterTotalBudget,
+	SUM(LastBudget) AS PreviousQuarterTotalBudget,
+    SUM(currentbudget) AS CurrentQuarterTotalBudget,
     COUNT(assetid) AS AssetCount,
     Quarter,
     Year,
       --This case section is checking to see if the previous year and quarter from the above row are 1 quarter
       --before the current quarter or is the 4th quarter of the previous year, if so, then it is summing the asset count for that quarter.
        CASE
-        WHEN LAG(Quarter, 1, 0) OVER (PARTITION BY EquitySourceName ORDER BY Year, Quarter) = Quarter - 1 and year = LAG(Year, 1, 0) OVER (PARTITION BY EquitySourceName ORDER BY Year)
-        THEN COUNT(assetid) - LAG(COUNT(assetid), 1, 0) OVER (PARTITION BY EquitySourceName ORDER BY Year, Quarter)
-        WHEN LAG(Year, 1, 0) OVER (PARTITION BY EquitySourceName ORDER BY Year) = Year - 1 AND LAG(Quarter, 1, 0) OVER (PARTITION BY EquitySourceName ORDER BY Year, Quarter) = 4
-        THEN COUNT(assetid) - LAG(COUNT(assetid), 1, 0) OVER (PARTITION BY EquitySourceName ORDER BY Year, Quarter)
+        WHEN LAG(Quarter, 1, 0) OVER (PARTITION BY EquityPartner ORDER BY Year, Quarter) = Quarter - 1 and year = LAG(Year, 1, 0) OVER (PARTITION BY EquityPartner ORDER BY Year)
+        THEN COUNT(assetid) - LAG(COUNT(assetid), 1, 0) OVER (PARTITION BY EquityPartner ORDER BY Year, Quarter)
+        WHEN LAG(Year, 1, 0) OVER (PARTITION BY EquityPartner ORDER BY Year) = Year - 1 AND LAG(Quarter, 1, 0) OVER (PARTITION BY EquityPartner ORDER BY Year, Quarter) = 4
+        THEN COUNT(assetid) - LAG(COUNT(assetid), 1, 0) OVER (PARTITION BY EquityPartner ORDER BY Year, Quarter)
         ELSE count(assetid)
     END AS AssetCount_Change
 FROM
-    CRPipelineInProcess
+    ActiveProjects
 WHERE
-    EquitySourceName IS NOT NULL
-    AND EquitySourceName <> '[blank]'
-    AND EquitySourceName <> '[TBD]'
+    EquityPartner IS NOT NULL
+    AND EquityPartner <> '[blank]'
+    AND EquityPartner <> '[TBD]'
 GROUP BY
-    EquitySourceName,
+    EquityPartner,
     Quarter,
     Year
 ORDER BY
-    EquitySourceName,
+    EquityPartner,
     Year ASC;
